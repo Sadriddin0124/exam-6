@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ModalApp from "./ModalApp";
+import EditModal from "./EditModal";
 
 export default function Cards() {
   const [tasks, setTasks] = useState([
@@ -12,20 +13,20 @@ export default function Cards() {
   const [index, setIndex] = useState("");
   const [index2, setIndex2] = useState('')
   const [defaults, setDefault] = useState('')
+  const [editVisible, setEditVisible] = useState(false)
   const addNewTask = (index) => {
     setVisibility(true);
     setIndex(index)
     setIndex2(null)
   };
-  const edit_task = (param, param2) => {
-    setIndex(param)
-    setIndex2(param2)
-    console.log(param2);
-    setVisibility(true)
-    setDefault(tasks[param].title[param2].name)
-  };
+  const edit_task =(index, index2)=> {
+    setIndex(index)
+    setIndex2(index2)
+    setDefault(tasks[index].title[index2].name)
+    setEditVisible(true)
+  }
   const deleteTask =(index, index2)=> {
-    tasks[index].title.splice(index2, 1);
+    tasks[index].title.splice(index2, 1)
     setTasks([...tasks])
   }
   return (
@@ -45,7 +46,7 @@ export default function Cards() {
                         <h3 className="me-5">{el.name}</h3>
                         <button
                           className="btn btn-info"
-                          onClick={() => edit_task(index, index2)}
+                          onClick={()=>edit_task(index, index2)}
                         >
                           edit
                         </button>
@@ -64,6 +65,17 @@ export default function Cards() {
           );
         })}
         <div className="row">
+          <EditModal
+          visibility={editVisible}
+          toggle={() => setEditVisible(false)}
+          setEditVisible={setEditVisible}
+          tasks={tasks}
+            setTasks={setTasks}
+            index={index}
+            index2={index2}
+            defaults={defaults}
+            setDefault={setDefault}
+          />
           <ModalApp
             visibility={visibility}
             toggle={() => setVisibility(false)}
